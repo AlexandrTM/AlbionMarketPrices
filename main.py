@@ -8,9 +8,11 @@ def main():
     processedImagesPath = basicPath + "\data\Processed images\Royal Cities"
     filePath = r"C:\Users\sasha\Desktop\resourceData.csv"
 
-    resourceNames = ["WOOD", "ROCK", "ORE", "HIDE", "FIBER"]
+    rawResourceNames = ["WOOD", "ROCK", "ORE", "HIDE", "FIBER"]
+    outputResourceNames = ["PLANKS", "STONEBLOCK", "METALBAR", "LEATHER", "CLOTH"]
+    materialNames = ["RUNE", "SOUL", "RELIC", "SHARD_AVALONIAN"]
     cityNames = ["Lymhurst", "Bridgewatch", "Martlock", "Thetford", "Fort Sterling"]
-    itemCategories = ["Resource"]
+    itemCategories = ["Resource", "Materials"]
     itemPaths = []
     processedImagesPaths = []
 
@@ -31,33 +33,38 @@ def main():
 
     # item and processed images paths loading
     for j in range(5, 9):
-        for k in range(len(resourceNames)):
+        for k in range(len(rawResourceNames)):
             itemPaths.append(
-                citiesPath + "\\" + cityNames[3] + "\\" + itemCategories[0] + "\T" + str(j) + "_" + resourceNames[k])
+                citiesPath + "\\" + cityNames[3] + "\\" + itemCategories[0] + "\Raw\T" + str(j) + "_" + rawResourceNames[k])
             processedImagesPaths.append(
-                processedImagesPath + "\\" + cityNames[3] + "\\" + itemCategories[0] + "\T" + str(j) + "_" + resourceNames[k])
+                processedImagesPath + "\\" + cityNames[3] + "\\" + itemCategories[0] + "\Raw\T" + str(j) + "_" + rawResourceNames[k])
 
-    # splitting images
-    # for i in range(len(itemPaths)):
-    #     for j in range(27):
-    #         splitImageIntoDigits(itemPaths[i] + "\Price" + str(j) + ".bmp", processedImagesPath + "\\" + cityNames[3])
-    #         splitImageIntoDigits(itemPaths[i] + "\Amount" + str(j) + ".bmp", processedImagesPath + "\\" + cityNames[3])
+    # splitting images into digits
+    for i in range(len(itemPaths)):
+        for j in range(27):
+            splitImageIntoDigits(itemPaths[i] + "\Price" + str(j) + ".bmp",
+                                 processedImagesPaths[i] + "\Price" + str(j) + ".bmp")
+            splitImageIntoDigits(itemPaths[i] + "\Amount" + str(j) + ".bmp",
+                                 processedImagesPaths[i] + "\Amount" + str(j) + ".bmp")
 
     # digits detection
-    file = open(filePath, "w")
-    file.close()
-    digitsFromImage = []
-    for i in range(len(processedImagesPaths)):
-        for j in range(27):
-            digitsFromImage.append(detectDigitsInImage(
-                processedImagesPaths[i] + "\Amount" + str(j) + ".bmp", amountAlphabetDigits))
-        writeListDataToFile(filePath, digitsFromImage)
-        digitsFromImage.clear()
-        for j in range(27):
-            digitsFromImage.append(detectDigitsInImage(
-                processedImagesPaths[i] + "\Price" + str(j) + ".bmp", priceAlphabetDigits))
-        writeListDataToFile(filePath, digitsFromImage)
-        digitsFromImage.clear()
+    # file = open(filePath, "w")
+    # file.close()
+    # digitsFromImage = []
+    # for i in range(len(processedImagesPaths)):
+    #     for j in range(27):
+    #         digitsFromImage.append(detectDigitsInImage(
+    #             processedImagesPaths[i] + "\Amount" + str(j) + ".bmp", amountAlphabetDigits))
+    #     writeListDataToFile(filePath, digitsFromImage)
+    #     digitsFromImage.clear()
+    #     file = open(filePath, "a")
+    #     # file.write("," + str(processedImagesPaths[:]))
+    #     file.close()
+    #     for j in range(27):
+    #         digitsFromImage.append(detectDigitsInImage(
+    #             processedImagesPaths[i] + "\Price" + str(j) + ".bmp", priceAlphabetDigits))
+    #     writeListDataToFile(filePath, digitsFromImage)
+    #     digitsFromImage.clear()
 
     # digitsFromImage.append(detectDigitsInImage(r"C:\Users\sasha\Desktop\changedImages\Resource\T5_WOOD" + "\Price" + str(25) + ".bmp", priceAlphabetDigits))
     # writeListDataToFile(filePath, digitsFromImage)

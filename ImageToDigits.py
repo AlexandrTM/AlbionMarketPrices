@@ -9,7 +9,7 @@ def getImageDifference(image1, image2):
     return 100 - np.mean(np.array(difference))
 
 
-def splitImageIntoDigits(imagePath, processedImagesPath):
+def splitImageIntoDigits(imagePath, processedImagePath):
     image = Image.open(imagePath)
     imagePixels = image.load()
 
@@ -25,7 +25,7 @@ def splitImageIntoDigits(imagePath, processedImagesPath):
                 for k in range(image.size[1]):
                     imagePixels[i, k] = (255, 0, 0)
     image = image.crop((0, 2, image.size[0], 9))
-    image.save(processedImagesPath + imagePath[imagePath.index("\\Resource"):])
+    image.save(processedImagePath)
 
 
 def detectDigitsInImage(imagePath, alphabet):
