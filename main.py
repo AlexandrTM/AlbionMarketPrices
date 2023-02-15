@@ -3,9 +3,9 @@ from ImageToDigits import *
 
 def main():
     basicPath = r"C:\Users\sasha\Desktop\Programms\скрипты\Albion\Market prices"
-    citiesPath = basicPath + "\data\Royal Cities"
+    citiesBasicPath = basicPath + "\data\Royal Cities"
     digitsPath = basicPath + "\data\Digits"
-    processedImagesPath = basicPath + "\data\Processed images\Royal Cities"
+    processedImagesBasicPath = basicPath + "\data\Processed images\Royal Cities"
     filePath = r"C:\Users\sasha\Desktop\resourceData.csv"
 
     rawResourceNames = ["WOOD", "ROCK", "ORE", "HIDE", "FIBER"]
@@ -31,40 +31,43 @@ def main():
         for j in range(priceAlphabetPathsPerNum[i]):
             priceAlphabetDigits[i].append(Image.open(digitsPath + "\Price\\" + str(i) + "\Digit" + str(j) + ".bmp"))
 
-    # item and processed images paths loading
-    for j in range(5, 9):
-        for k in range(len(rawResourceNames)):
-            itemPaths.append(
-                citiesPath + "\\" + cityNames[3] + "\\" + itemCategories[0] + "\Raw\T" + str(j) + "_" + rawResourceNames[k])
-            processedImagesPaths.append(
-                processedImagesPath + "\\" + cityNames[3] + "\\" + itemCategories[0] + "\Raw\T" + str(j) + "_" + rawResourceNames[k])
+    # for i in range(len(materialNames)):
+    #     createItemPaths(materialNames[i], 5, 8, cityNames[3], itemCategories[1],
+    #                     citiesBasicPath, processedImagesBasicPath, itemPaths, processedImagesPaths)
+
+    for i in range(len(rawResourceNames)):
+        createItemPaths(rawResourceNames[i], 5, 8, cityNames[3], itemCategories[0] + "\Raw",
+                        citiesBasicPath, processedImagesBasicPath, itemPaths, processedImagesPaths)
 
     # splitting images into digits
-    for i in range(len(itemPaths)):
-        for j in range(27):
-            splitImageIntoDigits(itemPaths[i] + "\Price" + str(j) + ".bmp",
-                                 processedImagesPaths[i] + "\Price" + str(j) + ".bmp")
-            splitImageIntoDigits(itemPaths[i] + "\Amount" + str(j) + ".bmp",
-                                 processedImagesPaths[i] + "\Amount" + str(j) + ".bmp")
+    # for i in range(len(itemPaths)):
+    #     for j in range(27):
+    #         splitImageIntoDigits(itemPaths[i] + "\Price" + str(j) + ".bmp",
+    #                              processedImagesPaths[i] + "\Price" + str(j) + ".bmp")
+    #         splitImageIntoDigits(itemPaths[i] + "\Amount" + str(j) + ".bmp",
+    #                              processedImagesPaths[i] + "\Amount" + str(j) + ".bmp")
 
     # digits detection
-    # file = open(filePath, "w")
-    # file.close()
-    # digitsFromImage = []
-    # for i in range(len(processedImagesPaths)):
-    #     for j in range(27):
-    #         digitsFromImage.append(detectDigitsInImage(
-    #             processedImagesPaths[i] + "\Amount" + str(j) + ".bmp", amountAlphabetDigits))
-    #     writeListDataToFile(filePath, digitsFromImage)
-    #     digitsFromImage.clear()
-    #     file = open(filePath, "a")
-    #     # file.write("," + str(processedImagesPaths[:]))
-    #     file.close()
-    #     for j in range(27):
-    #         digitsFromImage.append(detectDigitsInImage(
-    #             processedImagesPaths[i] + "\Price" + str(j) + ".bmp", priceAlphabetDigits))
-    #     writeListDataToFile(filePath, digitsFromImage)
-    #     digitsFromImage.clear()
+    file = open(filePath, "w")
+    file.close()
+    digitsFromImage = []
+    for i in range(len(processedImagesPaths)):
+        for j in range(27):
+            digitsFromImage.append(detectDigitsInImage(
+                processedImagesPaths[i] + "\Amount" + str(j) + ".bmp", amountAlphabetDigits))
+        writeListDataToFile(filePath, digitsFromImage)
+        digitsFromImage.clear()
+        file = open(filePath, "a")
+        file.write(str(processedImagesPaths[i][processedImagesPaths[i].index("Raw\\") + 4:]) + "\n")
+        file.close()
+        for j in range(27):
+            digitsFromImage.append(detectDigitsInImage(
+                processedImagesPaths[i] + "\Price" + str(j) + ".bmp", priceAlphabetDigits))
+        writeListDataToFile(filePath, digitsFromImage)
+        digitsFromImage.clear()
+        file = open(filePath, "a")
+        file.write("\n")
+        file.close()
 
     # digitsFromImage.append(detectDigitsInImage(r"C:\Users\sasha\Desktop\changedImages\Resource\T5_WOOD" + "\Price" + str(25) + ".bmp", priceAlphabetDigits))
     # writeListDataToFile(filePath, digitsFromImage)

@@ -4,9 +4,15 @@ from glob import glob
 from PIL import Image, ImageChops
 
 
-def getImageDifference(image1, image2):
-    difference = ImageChops.difference(image1, image2)
-    return 100 - np.mean(np.array(difference))
+def createItemPaths(itemName, tierStart, tierEnd, cityName, itemCategory,
+                    citiesBasicPath, processedImagesBasicPath, itemPaths, processedImagesPaths):
+    for j in range(tierStart, tierEnd + 1):
+        itemPaths.append(
+            citiesBasicPath + "\\" + cityName + "\\" + itemCategory + "\T" + str(j) + "_" +
+            itemName)
+        processedImagesPaths.append(
+            processedImagesBasicPath + "\\" + cityName + "\\" + itemCategory + "\T" + str(j) + "_" +
+            itemName)
 
 
 def splitImageIntoDigits(imagePath, processedImagePath):
@@ -82,11 +88,15 @@ def calculateAverageColorOfImage(image):
     return avgPixelColor
 
 
+def getImageDifference(image1, image2):
+    difference = ImageChops.difference(image1, image2)
+    return 100 - np.mean(np.array(difference))
+
+
 def writeListDataToFile(filePath, listData):
     file = open(filePath, "a")
     for i in range(len(listData)):
         file.write(str(listData[i]) + ",")
-    file.write("\n")
     file.close()
 
 
