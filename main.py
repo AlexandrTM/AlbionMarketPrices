@@ -38,22 +38,26 @@ def main():
             priceAlphabetDigits[i].append(Image.open(digitsPath + "\Price\\" + str(i) + "\Digit" + str(j) + ".bmp"))
 
     for i in range(len(cityNames)):
-        for j in range(len(materialNames)):
-            createItemPaths(materialNames[j], 4, 8, cityNames[i], itemCategories[1],
+        # for j in range(len(materialNames)):
+        #     createItemPaths(materialNames[j], 4, 8, cityNames[i], itemCategories[1],
+        #                     citiesBasicPath, processedImagesBasicPath, itemPaths, processedImagesPaths)
+        #
+        # for j in range(len(rawResourceNames)):
+        #     createItemPaths(rawResourceNames[j], 5, 8, cityNames[3], itemCategories[0] + "\Raw",
+        #                     citiesBasicPath, processedImagesBasicPath, itemPaths, processedImagesPaths)
+
+        for j in range(len(outputResourceNames)):
+            createItemPaths(outputResourceNames[j], 5, 8, cityNames[i], itemCategories[0] + "\Output",
                             citiesBasicPath, processedImagesBasicPath, itemPaths, processedImagesPaths)
 
-    # for i in range(len(rawResourceNames)):
-    #     createItemPaths(rawResourceNames[i], 5, 8, cityNames[3], itemCategories[0] + "\Raw",
-    #                     citiesBasicPath, processedImagesBasicPath, itemPaths, processedImagesPaths)
-
     # splitting images into digits
-    for i in range(len(itemPaths)):
-        for j in range(27):
-            splitImageIntoDigits(itemPaths[i] + "\Price" + str(j) + ".bmp",
-                                 processedImagesPaths[i] + "\Price" + str(j) + ".bmp", splitters)
-            splitImageIntoDigits(itemPaths[i] + "\Amount" + str(j) + ".bmp",
-                                 processedImagesPaths[i] + "\Amount" + str(j) + ".bmp", splitters)
-        print(itemPaths[i][itemPaths[i].index("_") - 2:], " splitted")
+    # for i in range(len(itemPaths)):
+    #     for j in range(27):
+    #         splitImageIntoDigits(itemPaths[i] + "\Price" + str(j) + ".bmp",
+    #                              processedImagesPaths[i] + "\Price" + str(j) + ".bmp", splitters)
+    #         splitImageIntoDigits(itemPaths[i] + "\Amount" + str(j) + ".bmp",
+    #                              processedImagesPaths[i] + "\Amount" + str(j) + ".bmp", splitters)
+    #     print(itemPaths[i][itemPaths[i].index("_") - 2:], " splitted")
 
     # digits detection
     file = open(filePath, "w")
@@ -78,8 +82,8 @@ def main():
     #     file.close()
     #     print(processedImagesPaths[i][processedImagesPaths[i].index("_") - 2:], "detected")
 
-    # digitsFromImage.append(detectDigitsInImage(r"C:\Users\sasha\Desktop\Programms\скрипты\Albion\Market prices\data\Processed images\Royal Cities\Lymhurst\Materials\T7_SHARD_AVALONIAN" + "\Price" + str(16) + ".bmp", priceAlphabetDigits))
-    # writeListDataToFile(filePath, digitsFromImage)
+    digitsFromImage.append(detectDigitsInImage(r"C:\Users\sasha\Desktop\Programms\скрипты\Albion\Market prices\data\Processed images\Royal Cities\Lymhurst\Resource\Output\T7_LEATHER" + "\Price" + str(15) + ".bmp", priceAlphabetDigits))
+    writeListDataToFile(filePath, digitsFromImage)
     # digitsFromImage.clear()
     # splitImageIntoDigits(r"C:\Users\sasha\Desktop\Programms\скрипты\Albion\Market prices\data\Royal Cities\Fort Sterling\Materials\T5_SOUL\Price24.bmp",
     #                     r"C:\Users\sasha\Desktop\Programms\скрипты\Albion\Market prices\data\Processed images\Royal Cities\Fort Sterling\Materials\T5_SOUL\Price24.bmp", splitters)

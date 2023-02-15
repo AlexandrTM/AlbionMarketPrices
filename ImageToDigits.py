@@ -47,11 +47,13 @@ def detectSplitterInImage(image, splitters):
 
 def detectDigitsInImage(imagePath, alphabet):
     image = Image.open(imagePath)
+    imagePixels = image.load()
     imageWidth, imageHeight = image.size
     digitsInImage = str()
     i = 0
-    while i < imageWidth + 1:
-        imagePixels = image.load()
+    while i < imageWidth:
+        # print(i, "i")
+        # print(imageWidth, "width")
         if imagePixels[i, 0] == (255, 0, 0):
             imageRegion = image.crop((0, 0, max(i, 1), image.size[1]))
             if calculateAverageColorOfImage(imageRegion) != [255, 0, 0]:
@@ -59,8 +61,9 @@ def detectDigitsInImage(imagePath, alphabet):
                 # imageRegion.show()
             if imageRegion.size[0] == (10 or 9):
                 digitsInImage += findDigitInImage(imageRegion.crop((5, 0, imageRegion.size[0], imageRegion.size[1])), alphabet)
-            image = image.crop((i + 1, 0, image.size[0], image.size[1]))
-            imageWidth -= imageRegion.size[0] + 1
+            image = image.crop((max(i, 1), 0, image.size[0], image.size[1]))
+            imagePixels = image.load()
+            imageWidth -= imageRegion.size[0]
             i = 0
             continue
         i += 1
