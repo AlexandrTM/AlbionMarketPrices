@@ -15,23 +15,34 @@ def createItemPaths(itemName, tierStart, tierEnd, cityName, itemCategory,
             itemName)
 
 
-def splitImageIntoDigits(imagePath, processedImagePath):
+def splitImageIntoDigits(imagePath, processedImagePath, splitters):
     image = Image.open(imagePath)
     imagePixels = image.load()
-
-    splittersPath = r"C:\Users\sasha\Desktop\Programms\скрипты\Albion\Market prices\data\Digits\Splitters"
-    splittersPaths = glob(splittersPath + "\*.bmp")
-    splitters = ["splitter" + str(i) for i in range(len(splittersPaths))]
-    for i in range(len(splittersPaths)):
-        splitters[i] = Image.open(splittersPaths[i])
+    redColoringInRow = 0
 
     for i in range(image.size[0]):
-        for j in range(len(splitters)):
-            if getImageDifference(image.crop((i, 0, i + 1, image.size[1])), splitters[j]) > 85:
-                for k in range(image.size[1]):
-                    imagePixels[i, k] = (255, 0, 0)
+        # sort splitters by frequency of occurrence
+        if detectSplitterInImage(image.crop((i, 0, i + 1, image.size[1])), splitters) == 1:
+            for j in range(image.size[1]):
+                imagePixels[i, j] = (255, 0, 0)
+            redColoringInRow += 1
+            if redColoringInRow > 6:
+                image = fillImageRegionWithColor(image, (i, 0), (255, 0, 0))
+                break
+        else:
+            redColoringInRow = 0
+
     image = image.crop((0, 2, image.size[0], 9))
     image.save(processedImagePath)
+
+
+def detectSplitterInImage(image, splitters):
+    splitterDetected = 0
+    for j in range(len(splitters)):
+        if getImageDifference(image, splitters[j]) > 82:
+            splitterDetected = 1
+            break
+    return splitterDetected
 
 
 def detectDigitsInImage(imagePath, alphabet):
@@ -39,14 +50,13 @@ def detectDigitsInImage(imagePath, alphabet):
     imageWidth, imageHeight = image.size
     digitsInImage = str()
     i = 0
-    while i < imageWidth:
+    while i < imageWidth + 1:
         imagePixels = image.load()
         if imagePixels[i, 0] == (255, 0, 0):
             imageRegion = image.crop((0, 0, max(i, 1), image.size[1]))
-            # imageRegion.show()
-            # print(imageRegion.size)
             if calculateAverageColorOfImage(imageRegion) != [255, 0, 0]:
                 digitsInImage += findDigitInImage(imageRegion, alphabet)
+                # imageRegion.show()
             if imageRegion.size[0] == (10 or 9):
                 digitsInImage += findDigitInImage(imageRegion.crop((5, 0, imageRegion.size[0], imageRegion.size[1])), alphabet)
             image = image.crop((i + 1, 0, image.size[0], image.size[1]))
@@ -68,6 +78,14 @@ def findDigitInImage(image, alphabet):
 
     digit = str(digitSimilarityValuesPerVariant.index(max(digitSimilarityValuesPerVariant)))
     return digit
+
+
+def fillImageRegionWithColor(image, coloringOffset, color):
+    imagePixels = image.load()
+    for i in range(coloringOffset[0], image.size[0]):
+        for j in range(coloringOffset[1], image.size[1]):
+            imagePixels[i, j] = color
+    return image
 
 
 def calculateAverageColorOfImage(image):
